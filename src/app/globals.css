@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 @import "tailwindcss";
+
 
 :root {
   --background: #ffffff;
@@ -8,6 +10,191 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 
+.css-5wchs2-MuiDateCalendar-root {
+  width: 100% !important;
+}
+
+.css-1xiumhb-MuiPickersLayout-root {
+  border-radius: 6px;
+}
+
+.css-1nxbkmn-MuiPickersCalendarHeader-root {
+  padding: 0 !important;
+}
+
+.css-4k4mmf-MuiButtonBase-root-MuiPickersDay-root,
+.css-1utq8po-MuiButtonBase-root-MuiPickersDay-root {
+  background-color: #F5F5F5 !important;
+  border-radius: 8px !important;
+  width: 48px !important;
+  height: 48px !important;
+  margin: 0 !important;
+  font-size: 20px !important;
+  font-weight: 500;
+  border: 2px solid transparent !important;
+}
+
+.css-1ayjnp4-MuiPickersDay-root,
+.css-qct7wd-MuiButtonBase-root-MuiPickersDay-root.Mui-selected,
+.css-17f9e7e-MuiTypography-root-MuiDayCalendar-weekDayLabel,
+.css-qct7wd-MuiButtonBase-root-MuiPickersDay-root,
+.css-1utq8po-MuiButtonBase-root-MuiPickersDay-root.Mui-disabled:not(.Mui-selected) {
+  width: 48px !important;
+  height: 48px !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  border: 2px solid transparent !important;
+  font-size: 20px !important;
+  font-weight: 500;
+}
+
+.css-1pv2de5-MuiDayCalendar-weekContainer {
+  margin: 0 0 .4rem !important;
+  gap: .4rem !important;
+}
+
+.css-1rl1vrc-MuiDayCalendar-header {
+  column-gap: .4rem !important;
+}
+
+.css-1n1xn3x-MuiPickersSlideTransition-root-MuiDayCalendar-slideTransition {
+  min-height: 290px !important;
+}
+
+.css-5wchs2-MuiDateCalendar-root {
+  height: auto !important;
+  min-height: 395px !important;
+}
+
+.css-qct7wd-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
+  background-color: #27BDBE !important;
+  font-size: 20px !important;
+  font-weight: 500;
+}
+
+.css-4k4mmf-MuiButtonBase-root-MuiPickersDay-root.Mui-selected,
+.css-1utq8po-MuiButtonBase-root-MuiPickersDay-root.Mui-selected,
+.css-qct7wd-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
+  color: #000000 !important;
+  border-color: #000000 !important;
+  background-color: rgba(0, 0, 0, 0.37) !important;
+}
+
+.css-qct7wd-MuiButtonBase-root-MuiPickersDay-root {
+  background-color: #27BDBE !important;
+  color: #ffffff !important;
+}
+
+.css-1chuxo2-MuiPickersCalendarHeader-label {
+  font-size: 20px !important;
+  font-weight: 500;
+  color: #131A29 !important;
+}
+
+.css-1utq8po-MuiButtonBase-root-MuiPickersDay-root {
+  background-color: #F5F5F5 !important;
+  position: relative !important;
+}
+
+.css-1utq8po-MuiButtonBase-root-MuiPickersDay-root::after {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  background-color: #27BDBE;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  bottom: .2rem;
+}
+
+/* .fc-theme-standard td,
+.fc-theme-standard th,
+.fc .fc-scrollgrid {
+  border: none !important;
+} */
+
+/* Reduce slot height a bit */
+.fc .fc-timegrid-slot {
+  height: 50px;
+}
+
+.fc-day {
+  background-color: #F5F5F5;
+}
+
+.fc-col-header-cell {
+  background-color: #ffffff;
+  border: none !important;
+  border-bottom: 1px solid #ddd !important;
+}
+
+.fc-timegrid-slot-label,
+.fc .fc-scrollgrid-section-header.fc-scrollgrid-section-sticky>*,
+.fc-scrollgrid-section>td,
+.fc .fc-scrollgrid,
+.fc-timegrid-axis {
+  border: none !important;
+}
+
+.fc .fc-scrollgrid-section-body table {
+  border-right: solid #ddd !important;
+  border-width: 0 1px 1px 0 !important;
+}
+
+.fc .fc-timegrid-slot-label {
+  vertical-align: text-top;
+}
+
+.fc-scrollgrid-sync-inner a div div:first-child {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.fc-scrollgrid-sync-inner a div div:last-child {
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.fc-timegrid-slot-label-cushion {
+  font-size: 14px;
+}
+
+.fc-day-today div a {
+  color: #ffffff;
+  border-radius: 5px;
+  background-color: #000000;
+}
+
+.fc-timegrid-event-harness-inset .fc-timegrid-event,
+.fc-timegrid-event.fc-event-mirror,
+.fc-timegrid-more-link {
+  box-shadow: none !important;
+  margin: 0;
+  border: none;
+}
+
+.fc-timegrid-event-harness {
+  left: -3% !important;
+  right: -3% !important;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
