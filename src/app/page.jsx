@@ -80,6 +80,19 @@ export default function Home() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingEventId, setEditingEventId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showBookedPopup, setShowBookedPopup] = useState(false);
+  const [animatePopup, setAnimatePopup] = useState(false);
+
+  const [showBookedPopupEmailSent, setShowBookedPopupEmailSent] = useState(false);
+  const [animatePopupEmailSent, setAnimatePopupEmailSent] = useState(false);
+
+
+  const [showCancelConfirmPopup, setShowCancelConfirmPopup] = useState(false);
+  const [animateCancelConfirmPopup, setAnimateCancelConfirmPopup] = useState(false);
+  const [pendingCancelBookingId, setPendingCancelBookingId] = useState(null);
+
+  
+  
 
   const nameRef = useRef();
   const emailRef = useRef();
@@ -188,35 +201,7 @@ export default function Home() {
     }
   };
 
-  const handleCancelBooking = async () => {
-    if (!editingEventId) return;
-
-    const confirmed = window.confirm(
-      "Are you sure you want to cancel this booking?"
-    );
-    if (!confirmed) return;
-
-    try {
-      const response = await fetch("/api/booking?type=cancel_booking", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookingid: editingEventId }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        getBookedDetails();
-        setEvents(events.filter((event) => event.id !== editingEventId));
-        closeModal();
-      } else {
-        alert(data.error || "Failed to cancel booking.");
-      }
-    } catch (error) {
-      console.error("Cancel error:", error);
-      alert("An error occurred while cancelling the booking.");
-    }
-  };
+ 
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -334,11 +319,12 @@ export default function Home() {
           const emailData = await response2.json();
 
           if (response2.ok) {
-            getBookedDetails();
-            alert(emailData.message || "Email sent successfully!");
-          } else {
-            alert(emailData.error || "Failed to send email.");
-          }
+        getBookedDetails();
+        setShowBookedPopupEmailSent(true);
+        setTimeout(() => setAnimatePopupEmailSent(true), 10); // trigger animation
+      } else {
+        alert(emailData.error || "Failed to send email.");
+      }
         } else {
           alert(data.error || "Failed to book appointment.");
         }
@@ -384,13 +370,16 @@ export default function Home() {
     if (event.extendedProps.isBooked) {
       const eventEmail = event.extendedProps.email;
 
-      if (storedEmail && eventEmail && storedEmail === eventEmail) {
-        // User owns this booking — allow editing
-      } else {
-        // Someone else's booking — block access
-        alert("This time slot is already booked.");
-        return;
-      }
+      if (!storedEmail || !eventEmail || storedEmail !== eventEmail) {
+      // Show animated popup instead of alert
+      setShowBookedPopup(true);
+
+      // Trigger entrance animation
+      setTimeout(() => setAnimatePopup(true), 10);
+
+      return;
+    }
+ 
     }
 
     const [name, service] = event.title.split(" - ");
@@ -442,8 +431,169 @@ export default function Home() {
     );
   };
 
+
+const handleShowCancelPopup = () => {
+  if (!editingEventId) return;
+  closeModal();
+  setPendingCancelBookingId(editingEventId);
+  setShowCancelConfirmPopup(true);
+};
+
+  const handleCancelBooking = async () => {
+  if (!pendingCancelBookingId) return;
+
+  // alert(pendingCancelBookingId);
+
+  try {
+    const response = await fetch("/api/booking?type=cancel_booking", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingid: pendingCancelBookingId }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      getBookedDetails();
+      setEvents(events.filter((event) => event.id !== pendingCancelBookingId));
+      closeModal();
+    } else {
+      alert(data.error || "Failed to cancel booking.");
+    }
+  } catch (error) {
+    console.error("Cancel error:", error);
+    alert("An error occurred while cancelling the booking.");
+  } finally {
+    setShowCancelConfirmPopup(false);
+    setPendingCancelBookingId(null);
+  }
+};
+
+
+
   return (
     <div className="container mx-auto px-4 py-3">
+
+
+
+
+
+      {showBookedPopupEmailSent && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 backdrop-blur-sm">
+    <div
+      className={`bg-white rounded-xl shadow-lg transform transition-all duration-300 ${
+        animatePopupEmailSent ? "opacity-100 scale-100" : "opacity-0 scale-90"
+      } max-w-sm w-full p-6 relative`}
+    >
+      <button
+        className="absolute top-2 right-2 w-9 h-9 flex items-center justify-center text-xl text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded-full transition duration-200 shadow-sm cursor-pointer"
+        onClick={() => {
+          setAnimatePopupEmailSent(false);
+          setTimeout(() => setShowBookedPopupEmailSent(false), 300);
+        }}
+        aria-label="Close popup"
+      >
+        &times;
+      </button>
+
+      <div className="text-center text-lg font-semibold text-green-600">
+        Email sent successfully!
+      </div>
+    </div>
+  </div>
+)}
+
+      
+
+
+
+
+
+
+
+
+
+      {showBookedPopup && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 backdrop-blur-sm z-50 ">
+    <div
+      className={`bg-white rounded-xl shadow-lg transform transition-all duration-300 ${
+        animatePopup ? "opacity-100 scale-100" : "opacity-0 scale-90"
+      } max-w-sm w-full p-6 relative`}
+    >
+      <button
+        className="absolute top-2 right-2 w-9 h-9 flex items-center justify-center text-xl text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded-full transition duration-200 shadow-sm cursor-pointer"
+        onClick={() => {
+          setAnimatePopup(false);
+          setTimeout(() => setShowBookedPopup(false), 300); // Match duration
+        }}
+        aria-label="Close popup"
+      >
+        &times;
+      </button>
+
+      <div className="text-center text-lg font-semibold text-gray-800">
+        This time slot is already booked.
+      </div>
+    </div>
+  </div>
+)}
+
+      
+
+
+
+
+
+
+
+
+{showCancelConfirmPopup && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 backdrop-blur-sm">
+    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative">
+      {/* Close (X) Button */}
+      <button
+        className="absolute top-3 right-3 w-8 h-8 text-xl text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded-full transition duration-200"
+        onClick={() => setShowCancelConfirmPopup(false)}
+        aria-label="Close"
+      >
+        &times;
+      </button>
+
+      {/* Confirmation Message */}
+      <div className="text-center text-lg font-semibold text-gray-800 mb-6">
+        Are you sure you want to cancel this booking?
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={handleCancelBooking}
+          className="px-5 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-200 cursor-pointer"
+        >
+          Yes
+        </button>
+        <button
+          onClick={() => setShowCancelConfirmPopup(false)}
+          className="px-5 py-2.5 bg-gray-300 text-gray-800 font-medium rounded-lg hover:bg-gray-400 transition duration-200 cursor-pointer"
+        >
+          No, Keep It
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+      
+
+
+
+
+
+
+
+      
+      
       <div className="flex flex-wrap">
         <div className="w-full lg:w-4/14 px-3">
           {/* current date */}
@@ -578,11 +728,10 @@ export default function Home() {
           {showModal && (
             <div
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 backdrop-blur-sm transition-opacity duration-300 "
-              onClick={closeModal}
             >
               <div className="bg-white rounded-[30px] w-full max-w-md px-5 py-[20px] relative border border-[#D9D9D9] shadow-lg transform transition-all duration-300 translate-y-4 opacity-0 animate-fadeInUp">
                 <button
-                  className=" ml-auto cursor-pointer w-9 h-9 flex items-center justify-center text-xl text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded-full transition duration-200 shadow-sm"
+                  className=" ml-auto cursor-pointer w-9 h-9 flex items-center justify-center text-xl text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded-full transition duration-200 shadow-sm mb-4"
                   onClick={closeModal}
                   aria-label="Close modal"
                 >
@@ -732,7 +881,7 @@ export default function Home() {
                     {isEditing && (
                       <button
                         type="button"
-                        onClick={handleCancelBooking}
+                        onClick={handleShowCancelPopup}
                         className="bg-red-600 text-white p-2 rounded-[35px] cursor-pointer font-bold w-1/3 leading-5"
                       >
                         Cancel Booking
